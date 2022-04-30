@@ -4,28 +4,32 @@ import { BsBookmark, BsBookmarkFill } from 'react-icons/bs';
 import { MdLocalMovies, MdTv } from 'react-icons/md'
 import styled from 'styled-components'
 import { Context } from './Context'
+import SearchResults from './SearchResults';
 
 export default function Bookmarked() {
 
 	const ctx = useContext(Context)
 
-	const resultsBookmarked = ctx.results.filter(item => item.isBookmarked)
-	const searchBookmarks = ctx.searchResults.filter(item => item.isBookmarked)
-	const bookmarks = [...new Set(resultsBookmarked,searchBookmarks)]
+	const bookmarks = ctx.results.filter(item => item.isBookmarked)
 
 	return (
-		<>
+		ctx.isActive === true ?
+      <>
+        <h1>Found {ctx.searchResults.length} results for '{ctx.searchTitle}'</h1>
+        <SearchResults />
+      </> :
+			<>
 			<h1>Bookmarks</h1>
 			<BookmarkContainer>
 				{bookmarks.length ? 
 				bookmarks.map((item, id) => {
 					return (
-						<BookmarkItem key={id} className="Bookmark">
+						<BookmarkItems key={id} className="Bookmark">
 							<Image>
 								<PlayContainer className='play-container' onClick={() => ctx.setCloseModal(!ctx.closeModal)}>
 									<PlayButton onClick={() => ctx.handleVideoClick(item.id)}><AiFillPlayCircle size={30}/> <span>Play</span></PlayButton>
 								</PlayContainer>
-								<img src={item.images.medium} alt={item.name}/>
+								<img src={item.image} alt={item.title}/>
 								<BookMark className={item.isBookmarked&&"bookmarked"} onClick={() => ctx.handleClick(item.id)}>{!item.isBookmarked ? <BsBookmark /> : <BsBookmarkFill />}</BookMark>
 							</Image>
 							<InfoContainer>
@@ -40,7 +44,7 @@ export default function Bookmarked() {
 									</div>
 								</Info>
 							</InfoContainer>
-						</BookmarkItem>
+						</BookmarkItems>
 					)
 			}) : <NoBookmarks><h2>No Bookmarks Found</h2></NoBookmarks>}
 			</BookmarkContainer>
@@ -49,73 +53,65 @@ export default function Bookmarked() {
 }
 
 const BookmarkContainer = styled.div`
-	display: flex;
-	flex-wrap: wrap;
-	gap: 80px 50px;
-	padding: 0 30px 30px 0;
-	position: relative;
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+	gap: 1rem;
 `
-const BookmarkItem = styled.div`
+const BookmarkItems = styled.div`
 	position: relative;
-	width: 300px;
-	height: 170px;
 `
 const Image = styled.div`
 	&:hover .play-container{
 		display: block;
 	}
+	
 	&:hover::after{
-			content: "";
-			background-color: rgba(0,0,0,0.4);
-			border: none;
-			border-radius: 8px;
-			position: absolute;
-			top: 50%;
-			left: 0;
-			transform: translateY(-50%);
-			width: 100%;
-			height: 100%;
-			overflow: transparent;
+		content: "";
+		background-color: rgba(0,0,0,0.2);
+		border: none;
+		border-radius: 8px;
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 170px;
 	}
+
 	img{
-			background-clip: border-box;
-			border-radius: 8px;
-			object-fit: cover;
-			position: relative;
-			width: 100%;
+		border-radius: 8px;
+		object-fit: cover;
+		width: 100%;
+		height: 170px;
 	}
 `
 const PlayContainer = styled.div`
 	display: none;
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
-	z-index: 1;
+  position: absolute;
+  top: 35%;
+  left: 45%;
+  transform: translate(-35%, -45%);
+  z-index: 1;
 `
 const PlayButton = styled.div`
-	background: rgba(255,255,255, 0.5);
-	border-radius: 50px;
-	display: flex;
-	align-items: center;
-	gap: 8px;
-	padding: 5px 10px;
+  background: rgba(255,255,255, 0.5);
+  border-radius: 50px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 10px;
 
-	span{
-		font-size: 1.15rem;
-	}
+  span{
+    font-size: 1.15rem;
+  }
 
 	:hover{
-		cursor: pointer;
-	}
+    cursor: pointer;
+  }
 `
 const InfoContainer = styled.div`
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
-	height: 100%;
-	position: relative;
-	z-index: 1;
 `
 const BookMark = styled.div`
 	background: rgba(90,105,143,.7);

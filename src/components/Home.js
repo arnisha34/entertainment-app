@@ -23,7 +23,7 @@ export default function Home() {
             <Trending />
         </TrendingItems>
       <h1>Recommended for you</h1>
-      <RecommendedItems>
+      <RecommendedItems className='recommended'>
           <Recommended />
       </RecommendedItems>
       </>}
@@ -34,6 +34,8 @@ export default function Home() {
 const Container = styled.div`
 `
 const TrendingItems = styled.div`
+  overflow-x: scroll;
+  overflow-y: hidden;
 `
 const RecommendedItems = styled.div`
 `

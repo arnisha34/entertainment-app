@@ -1,8 +1,8 @@
 import React, { useContext } from 'react'
 import { Link } from 'react-router-dom'
 import { signOut } from 'firebase/auth'
-import { BsBookmark, BsBookmarkFill } from 'react-icons/bs'
-import { MdLocalMovies, MdTv } from 'react-icons/md'
+import { BsBookmarkFill } from 'react-icons/bs'
+import { MdTv } from 'react-icons/md'
 import { CgProfile } from 'react-icons/cg'
 import { Context } from './Context'
 import styled from 'styled-components'
@@ -11,20 +11,19 @@ export default function SideNav({auth}) {
 
 	const ctx = useContext(Context)
 
-	const handleLogout  = async (e) => {
-		e.preventDefault()
+	const handleLogout = () => {
 		signOut(auth)
 		.then(() => {
 				ctx.setCurrentUser([])
 				window.location="/login"
-		}).catch((error) => {
-				alert(error.message)
+		}).catch((err) => {
+				alert(err.message)
 		})
 	}
 
-// console.log(ctx.currentUser)
 
 	return (
+		ctx.isCurrentPage !== "login" ?
 		<SideNavContainer>
 			<Logo to="/" className={`${ctx.isCurrentPage === "home" ? "active" : ""}`} onClick={() => ctx.setIsCurrentPage("home")}><img src='./images/logo.svg' alt="logo"/></Logo>
 			<NavItems className='nav-items'>
@@ -36,8 +35,8 @@ export default function SideNav({auth}) {
 			<PopoverMenu className='logout'>
 				<Logout to="/login" onClick={handleLogout}><span>Logout</span></Logout>
 			</PopoverMenu>
-			<Login to="/login" className={`${ctx.isCurrentPage === "login" ? "active" : ""}`} onClick={() => ctx.setIsCurrentpage("login")}>{ctx.currentUser ? <img src="./images/profile-pic.jpg" alt="profile"/> : <CgProfile size={30}/>}</Login>
-		</SideNavContainer>
+			<Login to="/login" className={`${ctx.isCurrentPage === "login" ? "active" : ""}`} onClick={() => ctx.setIsCurrentPage("login")}>{ctx.currentUser ? <img src="./images/profile-pic.jpg" alt="profile"/> : <CgProfile size={30}/>}</Login>
+		</SideNavContainer> : <div></div>
 	)
 }
 
@@ -58,6 +57,16 @@ const SideNavContainer = styled.div`
 		border-top-left-radius: 10px;
 		border-top-right-radius: 10px;
 		border-bottom-left-radius: 0;
+		flex-direction: row;
+		justify-content: center;
+		width: calc(100vw - 60px);
+		height: auto;
+		margin: 30px;
+		padding: 15px;
+	}
+
+	@media screen and (max-width: 576px) {
+		border-radius: 0;
 		flex-direction: row;
 		justify-content: center;
 		width: 100vw;

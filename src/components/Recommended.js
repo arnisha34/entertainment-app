@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext } from 'react'
 import { AiFillPlayCircle } from 'react-icons/ai'
 import { BsBookmark, BsBookmarkFill } from 'react-icons/bs';
 import { MdLocalMovies, MdTv } from 'react-icons/md'
@@ -20,8 +20,8 @@ export default function Recommended() {
 								<PlayContainer className='play-container' onClick={() => ctx.setCloseModal(!ctx.closeModal)}>
 									<PlayButton onClick={() => ctx.handleVideoClick(item.id)}><AiFillPlayCircle size={30}/> <span>Play</span></PlayButton>
 								</PlayContainer>
-								<img src={item.images.medium} alt={item.name}/>
-									<BookMark className={item.isBookmarked&&"bookmarked"} onClick={() => ctx.handleClick(item.id)}>{!item.isBookmarked ? <BsBookmark /> : <BsBookmarkFill />}</BookMark>
+								<img src={item.image} alt={item.title}/>
+								<BookMark className={item.isBookmarked&&"bookmarked"} onClick={() => ctx.handleClick(item.id)}>{!item.isBookmarked ? <BsBookmark /> : <BsBookmarkFill />}</BookMark>
 							</Image>
               <InfoContainer>
                 <Info>
@@ -43,61 +43,44 @@ export default function Recommended() {
   }
   
 const RecommendedContainer = styled.div`
-	display: flex;
-	flex-wrap: wrap;
-	gap: 80px 30px;
-	position: relative;
-
-	@media screen and (max-width: 1024px) {
-		gap: 20px;
-	}
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+	gap: 1rem;
 `
 const RecommendedItem = styled.div`
 	position: relative;
-	width: 300px;
-	height: 170px;
-
-	@media screen and (max-width: 1024px) {
-		width: 250px;
-		height: auto;
-	}
-
-	@media screen and (max-width: 768px) {
-		width: 140px;
-		height: auto;
-	}
 `
 const Image = styled.div`
+
 	&:hover .play-container{
 		display: block;
 	}
+	
 	&:hover::after{
-			content: "";
-			background-color: rgba(0,0,0,0.2);
-			border: none;
-			border-radius: 8px;
-			position: absolute;
-			top: 50%;
-			left: 0;
-			transform: translateY(-50%);
-			width: 100%;
-			height: 100%;
-			overflow: transparent;
+		content: "";
+		background-color: rgba(0,0,0,0.2);
+		border: none;
+		border-radius: 8px;
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 170px;
 	}
+
 	img{
-		background-clip: border-box;
 		border-radius: 8px;
 		object-fit: cover;
-		position: relative;
 		width: 100%;
+		height: 170px;
 	}
 `
 const PlayContainer = styled.div`
 	display: none;
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  top: 35%;
+  left: 45%;
+  transform: translate(-35%, -45%);
   z-index: 1;
 `
 const PlayButton = styled.div`
@@ -120,7 +103,6 @@ const InfoContainer = styled.div`
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
-	height: 100%;
 	position: relative;
 `
 const BookMark = styled.div`

@@ -10,11 +10,11 @@ import Search from './components/Search'
 import SideNav from "./components/SideNav"
 import Signup from './components/Signup'
 import TV from './components/TV'
-import { data } from './components/Data'
 import { Context } from "./components/Context"
 import styled from 'styled-components'
 
-import { auth } from './utils/firebase'
+import { auth, db } from './utils/firebase'
+import { collection, onSnapshot } from 'firebase/firestore'
 import { onAuthStateChanged } from 'firebase/auth'
 
 function App() {
@@ -23,6 +23,7 @@ function App() {
   const [currentUser, setCurrentUser] = useState([])
   const [isActive, setIsActive] = useState(false)
   const [isCurrentPage, setIsCurrentPage] = useState("home")
+  const [isLoading, setIsLoading] = useState(false)
   const [isRecommended, setIsRecommended] = ([])
   const [results, setResults] = useState([])
   const [searchResults, setSearchResults] = useState([])
@@ -30,19 +31,31 @@ function App() {
   const [videoURL, setVideoURL] = useState("")
 
   useEffect(() => {
-    setResults(data)
-    setSearchResults(data)
-    const stopAuth = onAuthStateChanged(auth, (user) => setCurrentUser(user))
-    return stopAuth
+    try{
+      const unsub = onSnapshot(collection(db, 'media'), (snapshot) => {
+        setResults(snapshot.docs.map(item => ({...item.data(), id: item.id})))
+        setSearchResults(snapshot.docs.map(item => ({...item.data(), id: item.id})))
+      })
+      setIsLoading(true)
+      return unsub
+    }catch(err){
+      console.log(err)
+      setIsLoading(false)
+    }
+    onAuthStateChanged(auth, (user) => setCurrentUser(user))
+
   },[])
+
+  console.log(currentUser)
 
   const handleClick = (id) => {
     const resultsBookmarked = results.map(item => item.id === id ? {...item, isBookmarked: !item.isBookmarked} : item)
 
     const searchResultsBookmarked = searchResults.map(item => item.id === id ? {...item, isBookmarked: !item.isBookmarked} : item)
 
-    setResults(resultsBookmarked)
-    setSearchResults(searchResultsBookmarked)
+    const bookmarks = [...new Set(resultsBookmarked,searchResultsBookmarked)]
+
+    setResults(bookmarks)
   }
 
   const handleVideoClick = (id) => {
@@ -51,10 +64,10 @@ function App() {
   }
 
   return (
-    <Context.Provider value={{closeModal, setCloseModal, currentUser, isActive, setIsActive, isCurrentPage, setIsCurrentPage, isRecommended, setIsRecommended, results, setResults, searchResults, searchTitle, setSearchTitle, setSearchResults, videoURL, setVideoURL, handleClick, handleVideoClick}}>
+    <Context.Provider value={{closeModal, setCloseModal, currentUser, isActive, setIsActive, isCurrentPage, setIsCurrentPage, isLoading, setIsLoading, isRecommended, setIsRecommended, results, setResults, searchResults, searchTitle, setSearchTitle, setSearchResults, videoURL, setVideoURL, handleClick, handleVideoClick}}>
       <div className="App">
         <div id="sideNav">
-            <SideNav />
+            <SideNav auth={auth}/>
         </div>
         <div id="main-content">
           <Search />

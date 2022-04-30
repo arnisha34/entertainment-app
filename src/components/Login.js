@@ -15,9 +15,9 @@ export default function Login({auth}) {
         await signInWithEmailAndPassword(auth, email.current.value, password.current.value)
         window.location = '/'
     } catch (err) {
-        console.log(err.code, err.message)
+      console.log(err.code, err.message)
     }
-}
+  }
 
   return (
     <LoginContainer className='login-container'>

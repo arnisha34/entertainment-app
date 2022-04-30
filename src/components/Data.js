@@ -234,7 +234,7 @@ export const data = [
             },
         "video": "https://www.youtube.com/embed/IN5TD4VRcSM",
         "year": 2022,
-        "category": "TV-Series",
+        "category": "TV Series",
         "rating": "TV-MA",
       "isBookmarked": false,
       "isTrending": false
@@ -295,7 +295,7 @@ export const data = [
         "video": "https://www.youtube.com/embed/m8Xt0yXaDPU",
         "year": 2022,
         "category": "Movie",
-        "rating": "R",
+        "rating": "PG",
         "isBookmarked": false,
         "isTrending": false
     },

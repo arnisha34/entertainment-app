@@ -5,7 +5,6 @@ import { MdLocalMovies, MdTv } from 'react-icons/md'
 import styled from 'styled-components'
 import { Context } from './Context'
 
-
 export default function Trending() {
 
   const ctx = useContext(Context)
@@ -13,12 +12,13 @@ export default function Trending() {
   const isTrending = ctx.results.filter(item => item.isTrending ? item : null)
 
   return (
-    <TrendingContainer>
+    !ctx.isLoading ? <img src="./images/loader.gif" alt="loader"/> :
+    <TrendingContainer className='trending-container'>
       {isTrending.map((item, id) => {
         return (
           <TrendingItem key={id}>
             <Image>
-              <img src={item.images.medium} alt={item.name}/>
+              <img src={item.image} alt={item.title}/>
             </Image>
             <InfoContainer>
               <PlayContainer className='play-container' onClick={() => ctx.setCloseModal(!ctx.closeModal)}>
@@ -38,7 +38,7 @@ export default function Trending() {
             </InfoContainer>
           </TrendingItem>
         )
-    })} 
+    })}
     </TrendingContainer>
   ) 
 }
