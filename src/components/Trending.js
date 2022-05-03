@@ -12,7 +12,6 @@ export default function Trending() {
   const isTrending = ctx.results.filter(item => item.isTrending ? item : null)
 
   return (
-    !ctx.isLoading ? <img src="./images/loader.gif" alt="loader"/> :
     <TrendingContainer className='trending-container'>
       {isTrending.map((item, id) => {
         return (

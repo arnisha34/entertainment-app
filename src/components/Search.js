@@ -20,15 +20,17 @@ export default function Search() {
     }
   }
 
+  console.log(ctx.isCurrentPage)
+
   return (
+    ctx.isCurrentPage === "login" ? <div></div> : ctx.isCurrentPage === "signup" ? <div></div> :
     <>
-    {(ctx.isCurrentPage !== "login") ?
       <SearchContainer className='search-container'>
           <SearchBar>
             <FiSearch size={28}/> <input name="search" placeholder='Search for movies or TV series' onChange={handleChange}/>
           </SearchBar>
-      </SearchContainer> : <div></div>}
-    </>
+      </SearchContainer>
+    </> 
   )
 }
 

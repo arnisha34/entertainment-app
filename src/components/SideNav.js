@@ -14,16 +14,16 @@ export default function SideNav({auth}) {
 	const handleLogout = () => {
 		signOut(auth)
 		.then(() => {
-				ctx.setCurrentUser([])
-				window.location="/login"
+			ctx.setCurrentUser([])
+			window.location="/login"
 		}).catch((err) => {
-				alert(err.message)
+			console.log(err.message)
 		})
 	}
 
 
 	return (
-		ctx.isCurrentPage !== "login" ?
+    ctx.isCurrentPage === "login" ? <div></div> : ctx.isCurrentPage === "signup" ? <div></div> :
 		<SideNavContainer>
 			<Logo to="/" className={`${ctx.isCurrentPage === "home" ? "active" : ""}`} onClick={() => ctx.setIsCurrentPage("home")}><img src='./images/logo.svg' alt="logo"/></Logo>
 			<NavItems className='nav-items'>
@@ -35,8 +35,8 @@ export default function SideNav({auth}) {
 			<PopoverMenu className='logout'>
 				<Logout to="/login" onClick={handleLogout}><span>Logout</span></Logout>
 			</PopoverMenu>
-			<Login to="/login" className={`${ctx.isCurrentPage === "login" ? "active" : ""}`} onClick={() => ctx.setIsCurrentPage("login")}>{ctx.currentUser ? <img src="./images/profile-pic.jpg" alt="profile"/> : <CgProfile size={30}/>}</Login>
-		</SideNavContainer> : <div></div>
+			<Login to="/login" className={`${ctx.isCurrentPage === "login" || ctx.isCurrentPage === "signup" ? "active" : ""}`} onClick={() => ctx.setIsCurrentPage("login")}>{ctx.currentUser ? <img src="./images/profile-pic.jpg" alt="profile"/> : <CgProfile size={30}/>}</Login>
+		</SideNavContainer>
 	)
 }
 
@@ -191,7 +191,7 @@ const Login = styled(Link)`
 
 const PopoverMenu = styled.div`
 	background-color: #fff;
-	// display: none;
+	display: none;
 	position: relative;
 	width: 70px;
 	height: 30px;
@@ -205,6 +205,10 @@ const PopoverMenu = styled.div`
 		transform: translateX(-50%) rotate(45deg);
 		width: 10px;
 		height: 10px;
+	}
+
+	:hover{
+		display: block;
 	}
 `
 

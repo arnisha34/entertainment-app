@@ -1,10 +1,14 @@
 import React, { useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { createUserWithEmailAndPassword } from 'firebase/auth'
+import { Context } from './Context'
 
 import styled from 'styled-components'
+import { useContext } from 'react'
 
 export default function Login({auth}) {
+
+  const ctx = useContext(Context)
 
   const email = useRef()
   const password = useRef()
@@ -26,7 +30,7 @@ export default function Login({auth}) {
         <input type="email" name="username" ref={email} placeholder='Email Address'/>
         <input type="password" name="password" ref={password} placeholder='Password'/>
         <button type='submit' onClick={newUserSignup}>Create account</button>
-        <SignUp>Already have an account? <Link to='/login'>Login</Link></SignUp>
+        <SignUp>Already have an account? <Link to='/login' onClick={() => ctx.setIsCurrentPage("login")}>Login</Link></SignUp>
       </SignupItem>
     </SignupContainer>
   )

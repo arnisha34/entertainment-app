@@ -18,14 +18,14 @@ export default function Home() {
         <SearchResults />
       </> :
       <>
-      <h1>Trending</h1>
+        <h1>Trending</h1>
         <TrendingItems className='trending'>
-            <Trending />
+          <Trending />
         </TrendingItems>
-      <h1>Recommended for you</h1>
-      <RecommendedItems className='recommended'>
+        <h1>Recommended for you</h1>
+        <RecommendedItems className='recommended'>
           <Recommended />
-      </RecommendedItems>
+        </RecommendedItems>
       </>}
     </Container>
   )

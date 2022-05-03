@@ -23,7 +23,6 @@ function App() {
   const [currentUser, setCurrentUser] = useState([])
   const [isActive, setIsActive] = useState(false)
   const [isCurrentPage, setIsCurrentPage] = useState("home")
-  const [isLoading, setIsLoading] = useState(false)
   const [isRecommended, setIsRecommended] = ([])
   const [results, setResults] = useState([])
   const [searchResults, setSearchResults] = useState([])
@@ -32,21 +31,18 @@ function App() {
 
   useEffect(() => {
     try{
-      const unsub = onSnapshot(collection(db, 'media'), (snapshot) => {
+      onSnapshot(collection(db, 'media'), (snapshot) => {
         setResults(snapshot.docs.map(item => ({...item.data(), id: item.id})))
         setSearchResults(snapshot.docs.map(item => ({...item.data(), id: item.id})))
       })
-      setIsLoading(true)
-      return unsub
+
     }catch(err){
       console.log(err)
-      setIsLoading(false)
     }
+    
     onAuthStateChanged(auth, (user) => setCurrentUser(user))
 
   },[])
-
-  console.log(currentUser)
 
   const handleClick = (id) => {
     const resultsBookmarked = results.map(item => item.id === id ? {...item, isBookmarked: !item.isBookmarked} : item)
@@ -64,7 +60,7 @@ function App() {
   }
 
   return (
-    <Context.Provider value={{closeModal, setCloseModal, currentUser, isActive, setIsActive, isCurrentPage, setIsCurrentPage, isLoading, setIsLoading, isRecommended, setIsRecommended, results, setResults, searchResults, searchTitle, setSearchTitle, setSearchResults, videoURL, setVideoURL, handleClick, handleVideoClick}}>
+    <Context.Provider value={{closeModal, setCloseModal, currentUser, isActive, setIsActive, isCurrentPage, setIsCurrentPage, isRecommended, setIsRecommended, results, setResults, searchResults, searchTitle, setSearchTitle, setSearchResults, videoURL, setVideoURL, handleClick, handleVideoClick}}>
       <div className="App">
         <div id="sideNav">
             <SideNav auth={auth}/>
@@ -83,7 +79,6 @@ function App() {
       </div>
       <ModalContainer className={closeModal ? "close" : "open"}>
         <CloseButton className='closeBtn' onClick={() => setCloseModal(!closeModal)}><CgCloseO/></CloseButton>
-
         <Modal />
       </ModalContainer>
     </Context.Provider>  
