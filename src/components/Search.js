@@ -19,23 +19,19 @@ export default function Search() {
       ctx.setSearchTitle(e.target.value)
     }
   }
-
-  console.log(ctx.isCurrentPage)
-
+  
   return (
-    ctx.isCurrentPage === "login" ? <div></div> : ctx.isCurrentPage === "signup" ? <div></div> :
-    <>
-      <SearchContainer className='search-container'>
-          <SearchBar>
-            <FiSearch size={28}/> <input name="search" placeholder='Search for movies or TV series' onChange={handleChange}/>
-          </SearchBar>
-      </SearchContainer>
-    </> 
+    (ctx.isCurrentPage === "login" || ctx.isCurrentPage === "signup" || ctx.isCurrentPage === "logout") ? <div></div> :
+    <SearchContainer className='search-container'>
+        <SearchBar>
+          <FiSearch size={28}/> <input name="search" placeholder='Search for movies or TV series' onChange={handleChange}/>
+        </SearchBar>
+    </SearchContainer>
   )
 }
 
 const SearchContainer = styled.div`
-    margin: 55px 0 30px;
+  margin: 55px 0 30px;
 `
 const SearchBar = styled.div`
   display: flex;

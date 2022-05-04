@@ -16,6 +16,7 @@ import styled from 'styled-components'
 import { auth, db } from './utils/firebase'
 import { collection, onSnapshot } from 'firebase/firestore'
 import { onAuthStateChanged } from 'firebase/auth'
+import Logout from './components/Logout'
 
 function App() {
 
@@ -35,7 +36,6 @@ function App() {
         setResults(snapshot.docs.map(item => ({...item.data(), id: item.id})))
         setSearchResults(snapshot.docs.map(item => ({...item.data(), id: item.id})))
       })
-
     }catch(err){
       console.log(err)
     }
@@ -63,7 +63,7 @@ function App() {
     <Context.Provider value={{closeModal, setCloseModal, currentUser, isActive, setIsActive, isCurrentPage, setIsCurrentPage, isRecommended, setIsRecommended, results, setResults, searchResults, searchTitle, setSearchTitle, setSearchResults, videoURL, setVideoURL, handleClick, handleVideoClick}}>
       <div className="App">
         <div id="sideNav">
-            <SideNav auth={auth}/>
+            <SideNav />
         </div>
         <div id="main-content">
           <Search />
@@ -74,6 +74,7 @@ function App() {
             <Route path='/bookmarks' element={<Bookmarked />}/>
             <Route path='/login' element={<Login auth={auth}/>}/>
             <Route path='/signup' element={<Signup auth={auth}/>}/>
+            <Route path='/logout' element={<Logout auth={auth}/>}/>
           </Routes>
         </div>
       </div>

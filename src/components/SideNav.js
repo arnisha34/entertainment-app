@@ -1,29 +1,17 @@
 import React, { useContext } from 'react'
 import { Link } from 'react-router-dom'
-import { signOut } from 'firebase/auth'
 import { BsBookmarkFill } from 'react-icons/bs'
 import { MdTv } from 'react-icons/md'
 import { CgProfile } from 'react-icons/cg'
 import { Context } from './Context'
 import styled from 'styled-components'
 
-export default function SideNav({auth}) {
+export default function SideNav() {
 
 	const ctx = useContext(Context)
 
-	const handleLogout = () => {
-		signOut(auth)
-		.then(() => {
-			ctx.setCurrentUser([])
-			window.location="/login"
-		}).catch((err) => {
-			console.log(err.message)
-		})
-	}
-
-
 	return (
-    ctx.isCurrentPage === "login" ? <div></div> : ctx.isCurrentPage === "signup" ? <div></div> :
+    (ctx.isCurrentPage === "login" || ctx.isCurrentPage === "signup" || ctx.isCurrentPage === "logout") ? <div></div> :
 		<SideNavContainer>
 			<Logo to="/" className={`${ctx.isCurrentPage === "home" ? "active" : ""}`} onClick={() => ctx.setIsCurrentPage("home")}><img src='./images/logo.svg' alt="logo"/></Logo>
 			<NavItems className='nav-items'>
@@ -32,10 +20,7 @@ export default function SideNav({auth}) {
 				<Television to="/tv" className={`${ctx.isCurrentPage === "tv" ? "active" : ""}`} onClick={() => ctx.setIsCurrentPage("tv")}><MdTv size={25}/></Television>
 				<Bookmarks to="/bookmarks" className={`${ctx.isCurrentPage === "bookmarks" ? "active" : ""}`} onClick={() => ctx.setIsCurrentPage("bookmarks")}><BsBookmarkFill size={20}/></Bookmarks>
 			</NavItems>
-			<PopoverMenu className='logout'>
-				<Logout to="/login" onClick={handleLogout}><span>Logout</span></Logout>
-			</PopoverMenu>
-			<Login to="/login" className={`${ctx.isCurrentPage === "login" || ctx.isCurrentPage === "signup" ? "active" : ""}`} onClick={() => ctx.setIsCurrentPage("login")}>{ctx.currentUser ? <img src="./images/profile-pic.jpg" alt="profile"/> : <CgProfile size={30}/>}</Login>
+			{!ctx.currentUser ? <Login to="/login"  onClick={() => ctx.setIsCurrentPage("login")}><CgProfile size={30}/></Login> : <LoggedIn className={`login ${(ctx.isCurrentPage === "login" || ctx.isCurrentPage === "signup") ? "active" : null}`} onClick={() => ctx.setIsCurrentPage("logout")} to="/logout"><img src="./images/profile-pic.jpg" className='profile-pic' alt="profile"/></LoggedIn>}
 		</SideNavContainer>
 	)
 }
@@ -151,33 +136,49 @@ const Bookmarks = styled(Link)`
 	&.active svg{
 		color: #fff;
 	}
+	`
+	const Login = styled(Link)`
+		svg{
+			color: var(--grayish-blue);
+		
+			:hover{
+				fill: #fff;
+				cursor: pointer;
+			}
+		}
+		
+		&.active svg{
+			color: #fff;
+		}
 `
-const Login = styled(Link)`
+const LoggedIn = styled(Link)`
 	display: flex;
-	img{
+
+	.login::after{
+		background-color: #fff;
+		content: "";
+		cursor: pointer;
+		position: absolute;
+		bottom: -5px;
+		left: 50%;
+		transform: translateX(-50%) rotate(45deg);
+		text-decoration: underline
+		width: 10px;
+		height: 10px;
+	}
+
+	.profile-pic{
 		border: 2px solid #fff;
 		border-radius: 50%;
 		box-sizing: border-box;
-		margin-top: 20px;
+		color: var(--dark-blue);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		line-height: 0;
 		width: 40px;
 		height: 40px;
-	}
-
-	a:hover .logout{
-		display: block;
-	}
-
-	svg{
-		color: var(--grayish-blue);
-
-		:hover{
-			fill: #fff;
-			cursor: pointer;
-		}
-	}
-
-	&.active svg{
-		color: #fff;
+		text-decoration: none;
 	}
 
 	@media screen and (max-width: 1024px) {
@@ -186,43 +187,5 @@ const Login = styled(Link)`
 			width: 30px;
 			height: 30px;
 		}
-	}
-`
-
-const PopoverMenu = styled.div`
-	background-color: #fff;
-	display: none;
-	position: relative;
-	width: 70px;
-	height: 30px;
-
-	::before{
-		background-color: #fff;
-		content: "";
-		position: absolute;
-		bottom: -5px;
-		left: 50%;
-		transform: translateX(-50%) rotate(45deg);
-		width: 10px;
-		height: 10px;
-	}
-
-	:hover{
-		display: block;
-	}
-`
-
-const Logout = styled(Link)`
-	color: var(--dark-blue);
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	height: 100%;
-	line-height: 0;
-	text-decoration: none;
-
-	:hover{
-		cursor: pointer;
-		text-decoration: underline
 	}
 `
